@@ -6,7 +6,6 @@
 #include "../src/route_model.h"
 #include "../src/route_planner.h"
 
-
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 {   
     std::ifstream is{path, std::ios::binary | std::ios::ate};
@@ -60,15 +59,12 @@ class RoutePlannerTest : public ::testing::Test {
     RouteModel::Node* mid_node = &model.FindClosestNode(mid_x, mid_y);
 };
 
-
 // Test the CalculateHValue method.
 TEST_F(RoutePlannerTest, TestCalculateHValue) {
     EXPECT_FLOAT_EQ(route_planner.CalculateHValue(start_node), 1.1329799);
     EXPECT_FLOAT_EQ(route_planner.CalculateHValue(end_node), 0.0f);
     EXPECT_FLOAT_EQ(route_planner.CalculateHValue(mid_node), 0.58903033);
 }
-
-
 
 // Test the AddNeighbors method.
 bool NodesSame(RouteModel::Node* a, RouteModel::Node* b) { return a == b; }
@@ -90,7 +86,6 @@ TEST_F(RoutePlannerTest, TestAddNeighbors) {
     }
 }
 
-
 // Test the ConstructFinalPath method.
 TEST_F(RoutePlannerTest, TestConstructFinalPath) {
     // Construct a path.
@@ -106,11 +101,10 @@ TEST_F(RoutePlannerTest, TestConstructFinalPath) {
     EXPECT_FLOAT_EQ(end_node->y, path.back().y);
 }
 
-
 // Test the AStarSearch method.
 TEST_F(RoutePlannerTest, TestAStarSearch) {
     route_planner.AStarSearch();
-    EXPECT_EQ(model.path.size(), 33);
+    EXPECT_EQ(model.path.size(), 42);
     RouteModel::Node path_start = model.path.front();
     RouteModel::Node path_end = model.path.back();
     // The start_node and end_node x, y values should be the same as in the path.
@@ -118,5 +112,5 @@ TEST_F(RoutePlannerTest, TestAStarSearch) {
     EXPECT_FLOAT_EQ(start_node->y, path_start.y);
     EXPECT_FLOAT_EQ(end_node->x, path_end.x);
     EXPECT_FLOAT_EQ(end_node->y, path_end.y);
-    EXPECT_FLOAT_EQ(route_planner.GetDistance(), 873.41565);
+    EXPECT_FLOAT_EQ(route_planner.GetDistance(), 874.3075);
 }

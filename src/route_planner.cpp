@@ -10,8 +10,8 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
 
     // TODO 2: Use the m_Model.FindClosestNode method to find the closest nodes to the starting and ending coordinates.
     // Store the nodes you find in the RoutePlanner's start_node and end_node attributes.
-    start_node = &model.FindClosestNode(start_x, start_y);
-    end_node = &model.FindClosestNode(end_x, end_y);
+    start_node = &m_Model.FindClosestNode(start_x, start_y);
+    end_node = &m_Model.FindClosestNode(end_x, end_y);
 }
 
 
@@ -50,9 +50,17 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Create a pointer to the node in the list with the lowest sum.
 // - Remove that node from the open_list.
 // - Return the pointer.
+struct less_than
+{
+    bool operator() (RouteModel::Node* a, RouteModel::Node* b)
+    {
+        return (a->h_value + a->g_value) < (b->h_value + b->g_value);
+    }
+};
+
 
 RouteModel::Node *RoutePlanner::NextNode() {
-    std::sort(open_list.begin(), open_list.end(), [](auto &a, auto &b) { return (a->h_value + a->g_value) < (b->h_value + b->g_value); });
+	std::sort(open_list.begin(), open_list.end(), less_than());
 	RouteModel::Node* lowest = open_list.front(); 
 	open_list.erase(open_list.begin());
 	return lowest; 
